@@ -1,10 +1,18 @@
 ﻿
 
+
+
 Dictionary<string, string> clientes = new Dictionary<string, string> 
 {
     { "123", "Leo" },
     { "456", "Lari" },
     { "789", "Caio" },
+};
+
+Dictionary<string, double> produtos = new Dictionary<string, double>
+{
+    { "coca", 8.00},
+    { "agua", 1.50 }
 };
 
 void ExibirMenuDeOpcoes()
@@ -13,26 +21,93 @@ void ExibirMenuDeOpcoes()
     //Exibir a opção de cadastrar
     Console.WriteLine("\nDigite 1 para Cadastrar um Cliente!");
     Console.WriteLine("Digite 2 para Listar os Clientes!");
+    Console.WriteLine("Digite 3 para Cadastrar um Produto!");
+    Console.WriteLine("Digite 4 para Listar os Produtos!");
 
     //armazenar o valor que foi digitado (int)
     Console.Write("\nDigite a sua opção: ");
     string opcaoString = Console.ReadLine()!; // "1"
-    int opcao = int.Parse(opcaoString); // 1
 
-    //verifica o valor digitado
-    switch (opcao)
+    if(int.TryParse(opcaoString, out var opcao))
     {
-        case 1:
-            CadastrarCliente();
-            break;
-        case 2:
-            ListarClientes();
-            break;
-        default:
-            break;
+        switch (opcao)
+        {
+            case 1:
+                CadastrarCliente();
+                break;
+            case 2:
+                ListarClientes();
+                break;
+            case 3:
+                CadastrarProduto();
+                break;
+            case 4:
+                ListarProdutos();
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        Console.WriteLine("\nValor inválido, tente novamente...");
+        Console.WriteLine("Teste hot-reload");
+        VoltarAoMenuPrincipal();
     }
 
+    //try
+    //{
+    //    int opcao = int.Parse(opcaoString); // 1
+
+    //    //verifica o valor digitado
+    //    switch (opcao)
+    //    {
+    //        case 1:
+    //            CadastrarCliente();
+    //            break;
+    //        case 2:
+    //            ListarClientes();
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
+    //catch (Exception)
+    //{
+    //    Console.WriteLine("Valor inválido, tente novamente...");
+    //    VoltarAoMenuPrincipal();
+    //}
     //execução do opção selecionada
+}
+
+void ListarProdutos()
+{
+    Console.Clear();
+    Console.WriteLine("-- Produto Cadastrados --\n");
+
+    foreach (var produto in produtos)
+    {
+        Console.WriteLine($"Nome: {produto.Key} | R${produto.Value:F2}");
+    }
+
+    VoltarAoMenuPrincipal();
+}
+
+void CadastrarProduto()
+{
+    Console.Clear();
+    Console.WriteLine("-- Cadastro de Produtos --");
+
+    Console.WriteLine("\nDigite o nome do produto: ");
+    string nome = Console.ReadLine()!;
+
+    Console.WriteLine("Digite o preço do produto: ");
+    double preco = double.Parse(Console.ReadLine()!);
+
+    produtos.Add(nome, preco);
+    Console.WriteLine($"{nome} foi adcionado com sucesso!!!");
+
+    VoltarAoMenuPrincipal();
 }
 
 void ListarClientes()
@@ -44,6 +119,7 @@ void ListarClientes()
     foreach (KeyValuePair<string, string> cliente in clientes)
     {
         Console.WriteLine($"Nome: {cliente.Value}, CPF:{cliente.Key}");
+        // diversos codigo...
     }
 
     VoltarAoMenuPrincipal();
