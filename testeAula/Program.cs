@@ -2,6 +2,7 @@
 
 
 
+
 Dictionary<string, string> clientes = new Dictionary<string, string> 
 {
     { "123", "Leo" },
@@ -23,6 +24,7 @@ void ExibirMenuDeOpcoes()
     Console.WriteLine("Digite 2 para Listar os Clientes!");
     Console.WriteLine("Digite 3 para Cadastrar um Produto!");
     Console.WriteLine("Digite 4 para Listar os Produtos!");
+    Console.WriteLine("Digite 5 para Alterar o preço do Produto!");
 
     //armazenar o valor que foi digitado (int)
     Console.Write("\nDigite a sua opção: ");
@@ -43,6 +45,9 @@ void ExibirMenuDeOpcoes()
                 break;
             case 4:
                 ListarProdutos();
+                break;
+            case 5:
+                AlterarPrecoProduto();
                 break;
             default:
                 break;
@@ -78,6 +83,29 @@ void ExibirMenuDeOpcoes()
     //    VoltarAoMenuPrincipal();
     //}
     //execução do opção selecionada
+}
+
+void AlterarPrecoProduto()
+{
+    Console.Clear();
+    Console.WriteLine("-- Alterar Preço do Produto --\n");
+
+    Console.WriteLine("Digite o nome do Produto para alterar o preço: ");
+    string nome = Console.ReadLine()!;
+
+    if (!produtos.ContainsKey(nome))
+    {
+        Console.WriteLine("\nProduto não encontrado");
+        VoltarAoMenuPrincipal();
+    }
+
+    Console.WriteLine("Digite o valor atualizado: ");
+    double valor = double.Parse(Console.ReadLine()!);
+
+    produtos[nome] = valor;
+
+    Console.WriteLine($"{nome} teve o valor alterado com sucesso - R${valor:F2}");
+    VoltarAoMenuPrincipal();
 }
 
 void ListarProdutos()
