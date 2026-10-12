@@ -3,191 +3,256 @@
 
 
 
-Dictionary<string, string> clientes = new Dictionary<string, string> 
+Dictionary<string, string> clientes = new Dictionary<string, string>
 {
     { "123", "Leo" },
-    { "456", "Lari" },
-    { "789", "Caio" },
+    { "456", "Lari"}
 };
 
 Dictionary<string, double> produtos = new Dictionary<string, double>
 {
-    { "coca", 8.00},
-    { "agua", 1.50 }
+    { "coca", 10.00},
+    { "agua", 3.50}
+};
+
+//Dictionary<string, List<string>> carrinhos = new Dictionary<string, List<string>>();
+Dictionary<string, List<string>> carrinhos = new Dictionary<string, List<string>>
+{
+    { "123", new List<string>{ "coca", "agua" } },
+    { "456", new List<string>() }
 };
 
 void ExibirMenuDeOpcoes()
 {
-    Console.WriteLine("-- PROJETO COMEX --");
-    //Exibir a opção de cadastrar
-    Console.WriteLine("\nDigite 1 para Cadastrar um Cliente!");
-    Console.WriteLine("Digite 2 para Listar os Clientes!");
-    Console.WriteLine("Digite 3 para Cadastrar um Produto!");
-    Console.WriteLine("Digite 4 para Listar os Produtos!");
-    Console.WriteLine("Digite 5 para Alterar o preço do Produto!");
+    // opções
+    Console.Clear();
+    Console.WriteLine("PROJETO COMEX");
+    Console.WriteLine("\nDigite 1 para Cadastrar Cliente");
+    Console.WriteLine("Digite 2 para Listar Clientes");
+    Console.WriteLine("Digite 3 para Cadastrar Produto");
+    Console.WriteLine("Digite 4 para Listar Produtos");
+    Console.WriteLine("Digite 5 para alterar Preço do Produto");
+    Console.WriteLine("Digite 6 para Adicionar Produto ao Carrinho");
+    Console.WriteLine("Digite 7 para Fechar compra");
+    Console.WriteLine("Digite -1 para encerrar o programa");
 
-    //armazenar o valor que foi digitado (int)
-    Console.Write("\nDigite a sua opção: ");
-    string opcaoString = Console.ReadLine()!; // "1"
+    // recupera valor digitado
+    Console.Write("Digite sua opção: ");
+    int opcao = int.Parse(Console.ReadLine()!);
 
-    if(int.TryParse(opcaoString, out var opcao))
+    // verifica valor
+    switch (opcao)
     {
-        switch (opcao)
-        {
-            case 1:
-                CadastrarCliente();
-                break;
-            case 2:
-                ListarClientes();
-                break;
-            case 3:
-                CadastrarProduto();
-                break;
-            case 4:
-                ListarProdutos();
-                break;
-            case 5:
-                AlterarPrecoProduto();
-                break;
-            default:
-                break;
-        }
+        case 1:
+            CadastrarCliente();
+            break;
+        case 2:
+            ListarClientes();
+            break;
+        case 3:
+            CadastrarProduto();
+            break;
+        case 4:
+            ListarProdutos();
+            break;
+        case 5:
+            AlterarPrecoProduto();
+            break;
+        case 6:
+            AdicionaProdutoNoCarrinho();
+            break;
+        case 7:
+            FecharCompra();
+            break;
+        case -1:
+            Console.WriteLine("\nFinalizado");
+            break;
+        default:
+            Console.WriteLine("\nOpção inválida! Pressione qualquer tecla para voltar.");
+            Console.ReadKey();
+            ExibirMenuDeOpcoes();
+            break;
     }
-    else
+}
+
+void FecharCompra()
+{
+    Console.Clear();
+    Console.WriteLine("=== FECHAR COMPRA ===");
+
+    Console.Write("Informe o CPF do cliente que quer fechar a compra: ");
+    string cpf = Console.ReadLine()!;
+
+    if (!clientes.ContainsKey(cpf))
     {
-        Console.WriteLine("\nValor inválido, tente novamente...");
-        Console.WriteLine("Teste hot-reload");
-        VoltarAoMenuPrincipal();
+        Console.WriteLine("\nCliente não cadastrado.");
+        RetornarMenuPrincipal();
+        return;
     }
 
-    //try
-    //{
-    //    int opcao = int.Parse(opcaoString); // 1
+    // buca todos os itens do carrinho
+    List<string> itensCarrinho = carrinhos[cpf];
 
-    //    //verifica o valor digitado
-    //    switch (opcao)
-    //    {
-    //        case 1:
-    //            CadastrarCliente();
-    //            break;
-    //        case 2:
-    //            ListarClientes();
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
-    //catch (Exception)
-    //{
-    //    Console.WriteLine("Valor inválido, tente novamente...");
-    //    VoltarAoMenuPrincipal();
-    //}
-    //execução do opção selecionada
+    if (itensCarrinho.Count == 0)
+    {
+        Console.WriteLine($"\nO carrinho de {clientes[cpf]} está vazio.");
+        RetornarMenuPrincipal();
+    }
+
+    Console.WriteLine($"\n--- Itens no Carrinho de {clientes[cpf]} ---");
+
+    double valorTotal = 0;
+    foreach (string item in itensCarrinho)
+    {
+        double precoItem = produtos[item];
+        Console.WriteLine($"- {item}: R$ {precoItem:F2}");
+        valorTotal += precoItem;
+    }
+
+    Console.WriteLine($"-----------------------------------");
+    Console.WriteLine($"Valor total da compra: R$ {valorTotal:F2}");
+
+    Console.Write("\nDigite os dados do cartão de crédito: ");
+    string numeroCartao = Console.ReadLine()!;
+
+    Console.WriteLine($"\nRealizando pagamento de R$ {valorTotal:F2} no cartão {numeroCartao}.");
+
+    // Limpa o carrinho após fechar a compra
+    carrinhos[cpf].Clear();
+
+    RetornarMenuPrincipal();
+}
+
+void AdicionaProdutoNoCarrinho()
+{
+    Console.Clear();
+    Console.WriteLine("=== ADICIONAR PRODUTO AO CARRINHO ===");
+
+    Console.Write("Informe o CPF do cliente que está comprando: ");
+    string cpf = Console.ReadLine()!;
+
+    if (!clientes.ContainsKey(cpf))
+    {
+        Console.WriteLine("\nUsuário não cadastrado.");
+        RetornarMenuPrincipal();
+    }
+
+    Console.Write("Informe o NOME do produto que deseja adicionar: ");
+    string nomeProduto = Console.ReadLine()!;
+
+    if (!produtos.ContainsKey(nomeProduto))
+    {
+        Console.WriteLine("\nProduto não cadastrado.");
+        RetornarMenuPrincipal();
+    }
+
+    carrinhos[cpf].Add(nomeProduto);
+    Console.WriteLine($"\nProduto '{nomeProduto}' adicionado ao carrinho de {clientes[cpf]} com sucesso!");
+
+    RetornarMenuPrincipal();
 }
 
 void AlterarPrecoProduto()
 {
     Console.Clear();
-    Console.WriteLine("-- Alterar Preço do Produto --\n");
+    Console.WriteLine("- Alterar Preço do Produto -");
 
-    Console.WriteLine("Digite o nome do Produto para alterar o preço: ");
+    Console.WriteLine("\nDigite o nome do produto para alterar o preço");
     string nome = Console.ReadLine()!;
 
     if (!produtos.ContainsKey(nome))
     {
         Console.WriteLine("\nProduto não encontrado");
-        VoltarAoMenuPrincipal();
+        ExibirMenuDeOpcoes();
     }
 
-    Console.WriteLine("Digite o valor atualizado: ");
+    Console.WriteLine("Digite o valo atualizado: ");
     double valor = double.Parse(Console.ReadLine()!);
-
     produtos[nome] = valor;
 
-    Console.WriteLine($"{nome} teve o valor alterado com sucesso - R${valor:F2}");
-    VoltarAoMenuPrincipal();
+    Console.WriteLine($"\n{nome} teve o valor alterado com sucesso - R${valor:F2}");
+    RetornarMenuPrincipal();
+
 }
 
 void ListarProdutos()
 {
     Console.Clear();
-    Console.WriteLine("-- Produto Cadastrados --\n");
+    Console.WriteLine("Listar Produtos");
 
     foreach (var produto in produtos)
     {
-        Console.WriteLine($"Nome: {produto.Key} | R${produto.Value:F2}");
+        Console.WriteLine($"{produto.Key}, R${produto.Value:F2}");
     }
 
-    VoltarAoMenuPrincipal();
+    RetornarMenuPrincipal();
 }
 
 void CadastrarProduto()
 {
     Console.Clear();
-    Console.WriteLine("-- Cadastro de Produtos --");
+    Console.WriteLine("- Cadastro de Produto -");
 
-    Console.WriteLine("\nDigite o nome do produto: ");
+    Console.WriteLine("Digite o nome do produto: ");
     string nome = Console.ReadLine()!;
 
     Console.WriteLine("Digite o preço do produto: ");
-    double preco = double.Parse(Console.ReadLine()!);
+    double valor = double.Parse(Console.ReadLine()!);
 
-    produtos.Add(nome, preco);
-    Console.WriteLine($"{nome} foi adcionado com sucesso!!!");
+    produtos.Add(nome, valor);
+    Console.WriteLine($"{nome} adicionado com sucesso!");
 
-    VoltarAoMenuPrincipal();
+    RetornarMenuPrincipal();
+}
+
+void CadastrarCliente()
+{
+    Console.Clear();
+    Console.WriteLine("- Cadastro de Cliente -");
+
+    Console.WriteLine("\nDigite o cpf do cliente: ");
+    string cpf = Console.ReadLine()!;
+
+    if (clientes.ContainsKey(cpf))
+    {
+        Console.WriteLine("Erro: Esse CPF já está cadastrado!");
+        RetornarMenuPrincipal();
+    }
+    else
+    {
+        Console.WriteLine("\nDigite o nome do cliente: ");
+        string nome = Console.ReadLine()!;
+
+        clientes.Add(cpf, nome);
+
+        // quando for fazer o carrinho
+        carrinhos.Add(cpf, new List<string>());
+
+        Console.WriteLine($"\n{nome} cadastrado com sucesso");
+        RetornarMenuPrincipal();
+    }
 }
 
 void ListarClientes()
 {
     Console.Clear();
-    Console.WriteLine("-- Listagem de Clientes --");
 
-    Console.WriteLine("\nClientes cadastrados...\n");
-    foreach (KeyValuePair<string, string> cliente in clientes)
+    Console.WriteLine("- Listar Clientes -");
+
+    Console.WriteLine("\nLista de CLientes\n");
+    foreach (var cliente in clientes)
     {
-        Console.WriteLine($"Nome: {cliente.Value}, CPF:{cliente.Key}");
-        // diversos codigo...
+        Console.WriteLine($"nome: {cliente.Value}, cpf: {cliente.Key}");
     }
 
-    VoltarAoMenuPrincipal();
+    RetornarMenuPrincipal();
 }
 
-void CadastrarCliente()
+
+void RetornarMenuPrincipal()
 {
-    // limpar a tela
-    Console.Clear();
-    Console.WriteLine("-- Cadastro de Cliente --");
-
-    // pedir para digir e guardar o cpf
-    Console.WriteLine("\nDigite o CPF do cliente: ");
-    string cpf = Console.ReadLine()!;
-
-    if (clientes.ContainsKey(cpf))
-    {
-        Console.WriteLine("Erro: CPF já está cadastrado...");
-        VoltarAoMenuPrincipal();
-    }
-
-    // pedir para digir e guardar o nome
-    Console.WriteLine("Digite o nome do Cliente: ");
-    string nome = Console.ReadLine()!;
-
-    // cadastrar o cliente (cpf/nome) no dicionario
-    clientes.Add(cpf, nome);
-
-    // Mensagem de sucesso!
-    Console.WriteLine($"\n{nome} cadastrado com sucesso!!!");
-
-    // voltar para o menu principal
-    VoltarAoMenuPrincipal();
-}
-
-void VoltarAoMenuPrincipal()
-{
-    Console.WriteLine("\nDigite qualquer tecla para voltar ao menu principal!!!");
+    Console.WriteLine("\nAperte qualquer tecla para voltar ao menu inicial...");
     Console.ReadKey();
-    Console.Clear();
     ExibirMenuDeOpcoes();
 }
 
