@@ -28,7 +28,8 @@ Dictionary<int, Menu> opcoesMenu = new()
     { 4, new MenuListarProdutos() },
     { 5, new MenuAlterarPreco() },
     { 6, new MenuAdicionarCarrinho() },
-    { 7, new MenuFecharCompra() }
+    { 7, new MenuFecharCompra() },
+    { 8, new MenuConsultarProdutosApi() }
 };
 
 void ExibirMenuDeOpcoes()
@@ -43,6 +44,7 @@ void ExibirMenuDeOpcoes()
     Console.WriteLine("Digite 6 para Adicionar Produto ao Carrinho");
     Console.WriteLine("Digite 7 para Fechar Compra");
     Console.WriteLine("Digite -1 para Encerrar o Programa");
+    Console.WriteLine("Digite 8 para Consultar Produtos da API Externa");
 
     Console.Write("\nDigite sua opção: ");
     if (int.TryParse(Console.ReadLine(), out int opcao))
