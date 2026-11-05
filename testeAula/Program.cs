@@ -1,166 +1,125 @@
-﻿
+﻿//using System;
+//using System.Collections.Generic;
+
+//class Program
+//{
+//    // Declarado como um campo estático da classe
+//    static Dictionary<string, List<string>> estoqueCategorizado = new();
+
+//    static void Main()
+//    {
+//        AdicionarProduto("Bebidas", "Coca-Cola");
+//        AdicionarProduto("Bebidas", "Água Mineral");
+//        AdicionarProduto("Eletrônicos", "Smartphone");
+
+//        foreach (var categoria in estoqueCategorizado)
+//        {
+//            Console.WriteLine($"Categoria: {categoria.Key}");
+//            foreach (var produto in categoria.Value)
+//            {
+//                Console.WriteLine($"  - {produto}");
+//            }
+//        }
+//    }
+
+//    // Como o dicionário agora é da classe, não precisamos passá-lo por parâmetro
+//    static void AdicionarProduto(string categoria, string produto)
+//    {
+//        if (!estoqueCategorizado.ContainsKey(categoria))
+//        {
+//            estoqueCategorizado[categoria] = new List<string>();
+//        }
+//        estoqueCategorizado[categoria].Add(produto);
+//    }
+//}
 
 
+//using System;
+//using System.Collections.Generic;
 
-Dictionary<string, string> clientes = new Dictionary<string, string> 
+//class Program
+//{
+//    static void Main()
+//    {
+//        List<Produto> produtos = new List<Produto>
+//        {
+//            new Produto("Notebook", 4500.00m),
+//            new Produto("Mouse", 150.00m),
+//            new Produto("Teclado", 300.00m)
+//        };
+
+//        // Ordenando pelo IComparable (Preço)
+//        produtos.Sort();
+//        Console.WriteLine("--- Ordenado por Preço ---");
+//        produtos.ForEach(Console.WriteLine);
+
+//        // Ordenando pelo IComparer customizado (Nome)
+//        produtos.Sort(new ComparadorProdutoPorNome());
+//        Console.WriteLine("\n--- Ordenado por Nome (A-Z) ---");
+//        produtos.ForEach(Console.WriteLine);
+//    }
+//}
+
+//public class Produto : IComparable<Produto>
+//{
+//    public string Nome { get; set; }
+//    public decimal Preco { get; set; }
+
+//    public Produto(string nome, decimal preco)
+//    {
+//        Nome = nome;
+//        Preco = preco;
+//    }
+
+//    // Ordenação natural padrão por Preço (crescente)
+//    public int CompareTo(Produto? outro)
+//    {
+//        if (outro == null) return 1;
+//        return Preco.CompareTo(outro.Preco);
+//    }
+
+//    public override string ToString() => $"{Nome} - R$ {Preco:F2}";
+//}
+
+//// Comparador alternativo por Nome (A-Z)
+//public class ComparadorProdutoPorNome : IComparer<Produto>
+//{
+//    public int Compare(Produto? x, Produto? y)
+//    {
+//        if (x == null || y == null) return 0;
+//        return string.Compare(x.Nome, y.Nome, StringComparison.Ordinal);
+//    }
+//}
+
+
+using System;
+using System.Collections.Generic;
+
+class Program
 {
-    { "123", "Leo" },
-    { "456", "Lari" },
-    { "789", "Caio" },
-};
-
-Dictionary<string, double> produtos = new Dictionary<string, double>
-{
-    { "coca", 8.00},
-    { "agua", 1.50 }
-};
-
-void ExibirMenuDeOpcoes()
-{
-    Console.WriteLine("-- PROJETO COMEX --");
-    //Exibir a opção de cadastrar
-    Console.WriteLine("\nDigite 1 para Cadastrar um Cliente!");
-    Console.WriteLine("Digite 2 para Listar os Clientes!");
-    Console.WriteLine("Digite 3 para Cadastrar um Produto!");
-    Console.WriteLine("Digite 4 para Listar os Produtos!");
-
-    //armazenar o valor que foi digitado (int)
-    Console.Write("\nDigite a sua opção: ");
-    string opcaoString = Console.ReadLine()!; // "1"
-
-    if(int.TryParse(opcaoString, out var opcao))
+    static void Main()
     {
-        switch (opcao)
+        Queue<string> filaAtendimento = new Queue<string>();
+
+        // Adicionando clientes à fila (Enqueue)
+        filaAtendimento.Enqueue("Ana");
+        filaAtendimento.Enqueue("Bruno");
+        filaAtendimento.Enqueue("Carlos");
+
+        // Consultando quem é o próximo da fila sem removê-lo (Peek)
+        if (filaAtendimento.Count > 0)
         {
-            case 1:
-                CadastrarCliente();
-                break;
-            case 2:
-                ListarClientes();
-                break;
-            case 3:
-                CadastrarProduto();
-                break;
-            case 4:
-                ListarProdutos();
-                break;
-            default:
-                break;
+            Console.WriteLine($"Próximo cliente a ser atendido: {filaAtendimento.Peek()}\n");
         }
+
+        // Processando o atendimento (Dequeue)
+        Console.WriteLine("--- Iniciando Atendimentos ---");
+        while (filaAtendimento.Count > 0)
+        {
+            string clienteAtual = filaAtendimento.Dequeue();
+            Console.WriteLine($"Atendendo agora: {clienteAtual}");
+        }
+
+        Console.WriteLine("\nFila de atendimento finalizada.");
     }
-    else
-    {
-        Console.WriteLine("\nValor inválido, tente novamente...");
-        Console.WriteLine("Teste hot-reload");
-        VoltarAoMenuPrincipal();
-    }
-
-    //try
-    //{
-    //    int opcao = int.Parse(opcaoString); // 1
-
-    //    //verifica o valor digitado
-    //    switch (opcao)
-    //    {
-    //        case 1:
-    //            CadastrarCliente();
-    //            break;
-    //        case 2:
-    //            ListarClientes();
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
-    //catch (Exception)
-    //{
-    //    Console.WriteLine("Valor inválido, tente novamente...");
-    //    VoltarAoMenuPrincipal();
-    //}
-    //execução do opção selecionada
 }
-
-void ListarProdutos()
-{
-    Console.Clear();
-    Console.WriteLine("-- Produto Cadastrados --\n");
-
-    foreach (var produto in produtos)
-    {
-        Console.WriteLine($"Nome: {produto.Key} | R${produto.Value:F2}");
-    }
-
-    VoltarAoMenuPrincipal();
-}
-
-void CadastrarProduto()
-{
-    Console.Clear();
-    Console.WriteLine("-- Cadastro de Produtos --");
-
-    Console.WriteLine("\nDigite o nome do produto: ");
-    string nome = Console.ReadLine()!;
-
-    Console.WriteLine("Digite o preço do produto: ");
-    double preco = double.Parse(Console.ReadLine()!);
-
-    produtos.Add(nome, preco);
-    Console.WriteLine($"{nome} foi adcionado com sucesso!!!");
-
-    VoltarAoMenuPrincipal();
-}
-
-void ListarClientes()
-{
-    Console.Clear();
-    Console.WriteLine("-- Listagem de Clientes --");
-
-    Console.WriteLine("\nClientes cadastrados...\n");
-    foreach (KeyValuePair<string, string> cliente in clientes)
-    {
-        Console.WriteLine($"Nome: {cliente.Value}, CPF:{cliente.Key}");
-        // diversos codigo...
-    }
-
-    VoltarAoMenuPrincipal();
-}
-
-void CadastrarCliente()
-{
-    // limpar a tela
-    Console.Clear();
-    Console.WriteLine("-- Cadastro de Cliente --");
-
-    // pedir para digir e guardar o cpf
-    Console.WriteLine("\nDigite o CPF do cliente: ");
-    string cpf = Console.ReadLine()!;
-
-    if (clientes.ContainsKey(cpf))
-    {
-        Console.WriteLine("Erro: CPF já está cadastrado...");
-        VoltarAoMenuPrincipal();
-    }
-
-    // pedir para digir e guardar o nome
-    Console.WriteLine("Digite o nome do Cliente: ");
-    string nome = Console.ReadLine()!;
-
-    // cadastrar o cliente (cpf/nome) no dicionario
-    clientes.Add(cpf, nome);
-
-    // Mensagem de sucesso!
-    Console.WriteLine($"\n{nome} cadastrado com sucesso!!!");
-
-    // voltar para o menu principal
-    VoltarAoMenuPrincipal();
-}
-
-void VoltarAoMenuPrincipal()
-{
-    Console.WriteLine("\nDigite qualquer tecla para voltar ao menu principal!!!");
-    Console.ReadKey();
-    Console.Clear();
-    ExibirMenuDeOpcoes();
-}
-
-ExibirMenuDeOpcoes();

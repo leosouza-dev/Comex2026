@@ -6,5 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+  <PackageReference Include="LeoSouzaDev.Comex.GeneradorRelatorio" Version="2.0.0" />  
+
+  <ItemGroup>
+    <PackageReference Include="LeoSouzaDev.Comex.GeneradorRelatorio" Version="2.0.0" />
+  </ItemGroup>
 
 </Project>
